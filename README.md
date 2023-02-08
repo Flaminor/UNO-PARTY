@@ -1,1 +1,1 @@
-Ecrivez vos modification et remarque sur le code du chacun :
+Ecrivez vos modification et remarque sur le code de chacun :
