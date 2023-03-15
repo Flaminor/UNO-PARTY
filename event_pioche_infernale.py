@@ -1,4 +1,4 @@
-def pioche_infernale(joueurs, nb_cartes_max=10, chance_tous_joueurs=0.01):
+def pioche_infernale(joueurs, nb_cartes_max=12, chance_tous_joueurs=0.01):
     # Tirer au sort un joueur
     joueur_selectionne = random.choice(joueurs)
     
