@@ -14,11 +14,10 @@ def IQ_test():
   "Quel est le nom de la plus grande île de France?": "Corsica",
   "Combien y a-t-il de régions en France?": "13"
   }
-  for i in range(1,4):
-    print(f"Question {i}")
+  for i in range(5):
+    print(f"Question",i+1)
     question = random.choice(list(quiz.keys()))
     answer = quiz[question]
-
     print(question)
     response = input()
     if response.lower() == answer.lower():
@@ -26,4 +25,8 @@ def IQ_test():
       rc+=1
     else:
       print("Incorrect. La réponse était: " + answer)
-IQ_test()
+  if rc==5:
+    return True,rc
+  else:
+    return False,rc
+print(IQ_test()[1])
