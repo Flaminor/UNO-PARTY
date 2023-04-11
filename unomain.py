@@ -1,14 +1,13 @@
 import random
-
+#Correction bug changement de sens
 # Définir les cartes Uno
 couleurs = ["Rouge", "Bleu", "Vert", "Jaune"]
-valeurs = [str(i) for i in range(0, 10)]
-valeurs += ["Passe", "Recommence", "Inverse"]
+valeurs = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "Passe", "Inverse", "+2","+6"]
 cartes = []
 
-for couleur in couleurs:
-    for valeur in valeurs:
-        carte = couleur + " " + valeur
+for couleur in range(len(couleurs)):
+    for valeur in range(len(valeurs)):
+        carte = couleurs[couleur] + " " + valeurs[valeur]
         cartes.append(carte)
 
 # Mélanger les cartes
@@ -24,7 +23,8 @@ for i in range(nb_joueurs):
         carte = cartes.pop()
         main_joueur.append(carte)
     joueurs.append({"nom": nom_joueur, "main": main_joueur})
-
+    
+    
 # Initialiser la pile de défausse
 defausse = [cartes.pop()]
 
@@ -37,9 +37,11 @@ def carte_jouable(carte):
         return True
     elif carte.split()[1] == "Passe":
         return True
-    elif carte.split()[1] == "Recommence":
-        return True
     elif carte.split()[1] == "Inverse":
+        return True
+    elif carte.split()[1] == "+2" and carte.split()[0]==derniere_carte.split()[0]:
+        return True
+    elif carte.split()[1]=="+6" and carte.split()[0]==derniere_carte.split()[0]:
         return True
     else:
         return False
@@ -51,31 +53,91 @@ def jouer_carte(joueur, carte):
 
 # Boucle principale du jeu
 joueur_courant = 0
-tour_suivant = 1
 sens = 1
 while True:
+    print("-------------------------------------------------------------------")
     print("La carte actuelle est :", defausse[-1])
     print("C'est au tour de", joueurs[joueur_courant]["nom"])
     print("Votre main est :", joueurs[joueur_courant]["main"])
     carte_jouee = input("Entrez le nom de la carte que vous voulez jouer (ou 'p' pour passer) : ")
     if carte_jouee == "p":
         joueurs[joueur_courant]["main"].append(cartes.pop())
-        tour_suivant += sens
+        if sens<0:
+            joueur_courant-=1
+        elif sens>0:
+            joueur_courant+=1
+            
     elif carte_jouable(carte_jouee):
         jouer_carte(joueurs[joueur_courant], carte_jouee)
         if len(joueurs[joueur_courant]["main"]) == 0:
             print(joueurs[joueur_courant]["nom"], "a gagné !")
             break
         if carte_jouee.split()[1] == "Passe":
-            tour_suivant += sens*2
-        elif carte_jouee.split()[1] == "Recommence":
-            tour_suivant = joueur_courant
+            if sens<0:
+                joueur_courant-=2
+            elif sens>0:
+                joueur_courant+=2
+            
         elif carte_jouee.split()[1] == "Inverse":
             sens *= -1
-            tour_suivant += sens*2
+            if sens<0:
+                joueur_courant-=1
+            elif sens>0:
+                joueur_courant+=1
+            
+        elif carte_jouee.split()[1] == "+2":
+            if sens<0:
+                joueur_courant-=1
+            elif sens>0:
+                joueur_courant+=1
+            if joueur_courant==-1:
+                joueur_courant=len(joueurs)-1
+            elif joueur_courant==-2:
+                joueur_courant=len(joueurs)-2
+            elif joueur_courant==len(joueurs):
+                joueur_courant=0
+            elif joueur_courant==len(joueurs)+1:
+                joueur_courant=1
+            for i in range(2):
+                joueurs[joueur_courant]["main"].append(cartes.pop())
+            if sens<0:
+                joueur_courant-=1
+            elif sens>0:
+                joueur_courant+=1
+        elif carte_jouee.split()[1]=="+6":
+            if sens<0:
+                joueur_courant-=1
+            elif sens>0:
+                joueur_courant+=1
+                
+            if joueur_courant==-1:
+                joueur_courant=len(joueurs)-1
+            elif joueur_courant==-2:
+                joueur_courant=len(joueurs)-2
+            elif joueur_courant==len(joueurs):
+                joueur_courant=0
+            elif joueur_courant==len(joueurs)+1:
+                joueur_courant=1            
+            for i in range(6):
+                joueurs[joueur_courant]["main"].append(cartes.pop())
+            if sens<0:
+                joueur_courant-=1
+            elif sens>0:
+                joueur_courant+=1   
         else:
-            tour_suivant += sens
+            if sens<0:
+                joueur_courant-=1
+            elif sens>0:
+                joueur_courant+=1
+            
     else:
-        print("Vous ne pouvez pas jouer cette carte.")
+        print("Carte non jouable")
         continue
-    joueur_courant = (joueur_courant + tour_suivant) % nb_joueurs
+    if joueur_courant==-1:
+        joueur_courant=len(joueurs)-1
+    elif joueur_courant==-2:
+        joueur_courant=len(joueurs)-2
+    elif joueur_courant==len(joueurs):
+        joueur_courant=0
+    elif joueur_courant==len(joueurs)+1:
+        joueur_courant=1
