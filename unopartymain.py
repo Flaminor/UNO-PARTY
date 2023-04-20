@@ -18,6 +18,8 @@ def mode_libre():
     # Initialiser la pile de défausse
     defausse = [cartes.pop()]
     cartes.append("SWAP")
+    for i in range(6):
+        cartes.append("Pioche Infernale")
     random.shuffle(cartes)
 
     # Initialiser les mains des joueurs---------------------------
@@ -37,6 +39,8 @@ def mode_libre():
     def carte_jouable(carte):
         derniere_carte = defausse[-1]
         if carte == "SWAP":
+            return True
+        elif carte=="Pioche Infernale":
             return True
         elif carte.split()[0] == derniere_carte.split()[0]:
             return True
@@ -60,7 +64,7 @@ def mode_libre():
     # Fonction pour jouer une carte
     def jouer_carte(joueur, carte):
         joueur["main"].remove(carte)
-        if carte != "SWAP":
+        if carte != "SWAP" or carte!="Pioche Infernale":
             defausse.append(carte)
 
     #fonction Evenements test de QI
@@ -147,7 +151,7 @@ def mode_libre():
     joueur_courant = 0
     sens = 1
     lst_joueurs = []
-    for i in range(1):
+    for i in range(nb_joueurs):
         lst_joueurs.append(str(i) + " " + "0")
 
     while True:
@@ -287,6 +291,18 @@ def mode_libre():
                     temp = joueurs[joueur_courant]["main"]
                     joueurs[joueur_courant]["main"] = joueurs[i]["main"]
                     joueurs[i]["main"] = temp
+                    if sens < 0:
+                        joueur_courant -= 1
+                    elif sens > 0:
+                        joueur_courant += 1
+                    break
+        elif carte_jouee=="Pioche Infernale":
+            nom_pioche_infernale = input("Donnez le nom du joueur : ")
+            for i in range(len(joueurs)):
+                if joueurs[i]["nom"] == nom_pioche_infernale:
+                    roue3=random.randint(2,12)
+                    for j in range(roue3):
+                        joueurs[i]["main"].append(cartes.pop())
                     if sens < 0:
                         joueur_courant -= 1
                     elif sens > 0:
@@ -840,7 +856,7 @@ def histoire():
                     print("Evènement Test de QI")
                     restestqi = IQ_test()
                     if restestqi[0] == False:
-                        print("Vous avez échoué à " + str(restestqi[1]) + " questions donc vous allez piocher " + str(
+                        print("Vous allez piocher " + str(
                             restestqi[1]) + " cartes")
                     for i in range(restestqi[1]):
                         joueurs[joueur_courant]["main"].append(cartes.pop())
@@ -1081,7 +1097,7 @@ def histoire():
                     print("Evènement Test de QI")
                     restestqi = IQ_test()
                     if restestqi[0] == False:
-                        print("Vous avez échoué à " + str(restestqi[1]) + " questions donc vous allez piocher " + str(
+                        print("Vous allez piocher " + str(
                             restestqi[1]) + " cartes")
                     for i in range(restestqi[1]):
                         joueurs[joueur_courant]["main"].append(cartes.pop())
@@ -1284,7 +1300,7 @@ def histoire():
         joueur_courant = 0
         sens = 1
         lst_joueurs = []
-        for i in range(1):
+        for i in range(4):
             lst_joueurs.append(str(i) + " " + "0")
 
         while True:
@@ -1606,7 +1622,7 @@ def histoire():
                     print("Evènement Test de QI")
                     restestqi = IQ_test()
                     if restestqi[0] == False:
-                        print("Vous avez échoué à " + str(restestqi[1]) + " questions donc vous allez piocher " + str(
+                        print("Vous allez piocher " + str(
                             restestqi[1]) + " cartes")
                     for i in range(restestqi[1]):
                         joueurs[joueur_courant]["main"].append(cartes.pop())
@@ -1950,7 +1966,7 @@ def histoire():
         joueur_courant = 0
         sens = 1
         lst_joueurs = []
-        for i in range(1):
+        for i in range(3):
             lst_joueurs.append(str(i) + " " + "0")
 
         while True:
@@ -2110,7 +2126,7 @@ def histoire():
                     print("Evènement Test de QI")
                     restestqi = IQ_test()
                     if restestqi[0] == False:
-                        print("Vous avez échoué à " + str(restestqi[1]) + " questions donc vous allez piocher " + str(
+                        print("Vous allez piocher " + str(
                             restestqi[1]) + " cartes")
                     for i in range(restestqi[1]):
                         joueurs[joueur_courant]["main"].append(cartes.pop())
@@ -2462,7 +2478,7 @@ def histoire():
         joueur_courant = 0
         sens = 1
         lst_joueurs = []
-        for i in range(1):
+        for i in range(2):
             lst_joueurs.append(str(i) + " " + "0")
 
         while True:
@@ -2634,7 +2650,7 @@ def histoire():
                     print("Evènement Test de QI")
                     restestqi = IQ_test()
                     if restestqi[0] == False:
-                        print("Vous avez échoué à " + str(restestqi[1]) + " questions donc vous allez piocher " + str(
+                        print("Vous allez piocher " + str(
                             restestqi[1]) + " cartes")
                     for i in range(restestqi[1]):
                         joueurs[joueur_courant]["main"].append(cartes.pop())
@@ -3003,6 +3019,7 @@ def mode_libre_bots(nom, nbr_bots):
             carte = cartes.pop()
             main_joueur.append(carte)
         joueurs.append({"nom": bots + str(k), "main": main_joueur})
+    nbr_bots+=1
 
     # -----------------------------------------------------------
 
@@ -3114,7 +3131,7 @@ def mode_libre_bots(nom, nbr_bots):
     joueur_courant = 0
     sens = 1
     lst_joueurs = []
-    for i in range(1):
+    for i in range(nbr_bots):
         lst_joueurs.append(str(i) + " " + "0")
 
     while True:
@@ -3438,7 +3455,7 @@ def mode_libre_bots(nom, nbr_bots):
                 print("Evènement Test de QI")
                 restestqi = IQ_test()
                 if restestqi[0] == False:
-                    print("Vous avez échoué à " + str(restestqi[1]) + " questions donc vous allez piocher " + str(
+                    print("Vous allez piocher " + str(
                         restestqi[1]) + " cartes")
                 for i in range(restestqi[1]):
                     joueurs[joueur_courant]["main"].append(cartes.pop())
